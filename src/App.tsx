@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { Typography, AppBar, Toolbar, Menu, MenuItem, IconButton } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu';
 import AddAnnotations from './AddAnnotations';
 import SeeAnnotations from './SeeAnnotations';
 import {
@@ -11,6 +13,16 @@ import {
 
 const App = () =>{
 
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
   /*const annotations = useQuery(GET_ANNOTATIONS)
   const [addAnnotation] = useMutation(ADD_ANNOTATIONS)
   
@@ -35,30 +47,55 @@ const App = () =>{
   }*/
 
   return (
+    <>
     <Router>
       <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/AddAnnotations">AddAnnotations</Link>
-            </li>
-            <li>
-              <Link to="/SeeAnnotations">SeeAnnotations</Link>
-            </li>
-          </ul>
-        </nav>
+        <AppBar position="static">
+            <Toolbar>
+              
+            <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} edge="start" color="inherit" aria-label="menu">
+                <MenuIcon />
+            </IconButton>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
 
-        
-        <Switch>
-          <Route path="/AddAnnotations">
-            <AddAnnotations/>
-          </Route>
-          <Route path="/SeeAnnotations">
-            <SeeAnnotations/>
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+                    <div>
+
+                        <Link to="/AddAnnotations" style={{textDecoration:'none'}}>
+                            <MenuItem onClick={handleClose}>Add an annotation</MenuItem>
+                        </Link>
+
+                        <Link to="/SeeAnnotations" style={{textDecoration:'none'}}>
+                            <MenuItem onClick={handleClose}>See annotations</MenuItem>
+                        </Link>
+                    </div>
+                
+
+                <MenuItem onClick={handleClose}>Add a category</MenuItem>
+            </Menu>
+
+                <Typography  color="inherit" align="center">
+                ANNOTATION SYSTEM
+                </Typography>
+            </Toolbar>
+        </AppBar>
+        </div>
+          <Switch>
+          
+            <Route path="/AddAnnotations">
+              <AddAnnotations/>
+            </Route>
+            <Route path="/SeeAnnotations">
+              <SeeAnnotations/>
+            </Route>
+          </Switch>
+      </Router>
+    </>
     
     //<AddAnnotations/>
   );
