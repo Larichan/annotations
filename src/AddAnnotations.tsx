@@ -1,10 +1,9 @@
 import gql from 'graphql-tag';
 import React, { Component, useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo'
-//import { ApolloProvider, useQuery} from '@apollo/react-hooks';
-import * as uuid from 'uuid'
+//import * as uuid from 'uuid'
 
-const GET_CATEGORYS = gql`
+export const GET_CATEGORYS = gql`
       query{
         category
         {
@@ -48,10 +47,10 @@ interface CategoryData {
 }
 
 const AddAnnotations: React.FC = () => {
-   
+
    const [title, setTitle] = useState('')
    const [content, setContent] = useState('')
-   const [category = uuid.v4(), setCategory] = useState('')
+   const [category, setCategory] = useState('')
 
    const [addAnnotation] = useMutation(ADD_ANNOTATIONS)
    const {loading, error, data} = useQuery<CategoryData>(GET_CATEGORYS)
@@ -63,8 +62,7 @@ const AddAnnotations: React.FC = () => {
      <div>
        <form onSubmit={e => {
          e.preventDefault()
-         //addAnnotation({variables: {title: title, content: content, category_id: category}})
-         console.log(category)
+         addAnnotation({variables: {title: title, content: content, category_id: category}})
        }}>
          <p>Escreva o título da anotação</p>
          <input className="Entrada"
@@ -83,16 +81,17 @@ const AddAnnotations: React.FC = () => {
          </textarea>
 
          <select value={category} onChange={e => setCategory(e.target.value)}>
+           <option value="" selected disabled hidden>Categoria</option>
            {data && data.category.map(i =>(
           <option value={i.id}>{i.name}</option>
            ))}
-         </select>  
+         </select>
             <button type="submit">Click me</button>
        </form>
      </div>
    )
 
-   
+
 }
 
 
